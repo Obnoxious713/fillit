@@ -29,6 +29,7 @@ typedef struct			s_etris
 	char				**shape;
 	int					width; // most tetrimino dims (2, 3) (3, 2)
 	int					height; // only one possible fit in (1, 4) (4, 1) (2, 2)
+	int					id;
 	t_point				*first;
 }						t_etris;
 
@@ -71,10 +72,10 @@ char				**make_empty_map(size_t size);
 void 				free_map(t_map **map);
 
 int					solve(t_list *pieces);
-int					setup_solve(t_list **pieces);
-int					solve_map(t_map *map, t_list **pieces, t_point *point);
+int					setup_solve(t_list **pieces, t_map *map);
+int					solve_map(t_map *map, t_list **pieces);
 
-void 				tet_place(t_etris* tetris, t_map *map, t_point *point);
+void 				tet_place(t_etris* tetris, t_map *map);
 void 				tet_remove(t_etris* tetris, t_map *map);
 int					check_tet_max(t_etris *tetris, t_map *map, t_point *point);
 int					tet_x_shift(t_etris *tetris);

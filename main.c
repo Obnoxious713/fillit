@@ -104,11 +104,20 @@ int					main(int ac, char **av)
 {
 	int				file;
 	t_list			*pieces;
-
+	t_map			*map;
+	size_t			map_size;
 
 
 	if (ac == 2)
 	{
+		map_size = 2;
+		if (!(map = create_map(map_size)))
+		{
+			ft_putendl("\nsetup_solve !map");
+			return (0);
+		}
+		(*map).r = 0;
+		(*map).c = 0;
 		if (!(file = open(av[1], O_RDONLY)))
 		{
 			ft_putendl("\nmain !file = open");
@@ -120,7 +129,14 @@ int					main(int ac, char **av)
 			close(file);
 			return (0);
 		}
-		return(error_ret(solve(pieces)));
+		while (!(setup_solve(&pieces, map)))
+		{
+			printf("map_size = %d\n", (int)(map_size));
+			free_map(&map);
+			map = create_map(map_size++);
+
+		}
+		ft_putstrarr(map->rows);
 	}
 	else
 		return (error_ret(0));

@@ -28,22 +28,21 @@ int				check_tet_fits(t_etris *tetris, t_map *map)
 
 	safe = 0;
 	y = -1;
-	c = -1;
 	r = map->r;
 	c = map->c;
+	ft_putstrarr(tetris->shape);
 	while (tetris->shape[++y] != NULL)
 	{
-		++c;
+		//printf("\ny = %d\n\n", y);
 		x = -1;
-		r = -1;
 		while (tetris->shape[y][++x] != '\0')
 		{
-			++r;
+			//printf("\nx = %d\n\n", x);
 			if (tetris->shape[y][x] != '.')
 			{
-				if (check_safe(map, c, r) != 0)
+				if (check_safe(map, y, x))
 				{
-					ft_putendl("\nsafe");
+					//ft_putendl("\nsafe");
 					safe++;
 				}
 				else
@@ -64,18 +63,19 @@ int				check_tet_fits(t_etris *tetris, t_map *map)
 **	if the x pos is the same as the map dim it returns (2)
 **	returns (0) if it's not safe
 */
-int				check_safe(t_map *map, int c, int r)
+int				check_safe(t_map *map, int y, int x)
 {
-	//null
-	//other letters
-	if (map->rows[c][r] == '.')
+	int			c;
+	int			r;
+
+	c = map->c;
+	r = map->r;
+	if (map->rows[c + y][r + x] == '.')
 	{
-		if ((map->rows)[c][r] != (int)map->size) // newlines
-		{
-			//if (map->rows)
-		}
-			return (1);
+		printf("c = %d\n\ny = %d\n\nr = %d\n\nx = %d\n\n", c, y, r, x);
+		return (1);
 	}
+	ft_putendl("check_safe return 0");
 	return (0);
 }
 

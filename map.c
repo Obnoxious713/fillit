@@ -28,6 +28,8 @@ void 				free_map(t_map **map)
 		ft_strdel(&((*map)->rows[row++]));
 	free((*map)->rows);
 	(*map)->rows = NULL;
+	(*map)->c = 0;
+	(*map)->r = 0;
 	free(*map);
 	*map = NULL;
 }

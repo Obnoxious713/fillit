@@ -94,6 +94,7 @@ t_etris			*make_piece(char *tet, int id)
 	{
 		tetris->height = (*point[1]).y - (*point[0]).y + 1;
 		tetris->width = (*point[1]).x - (*point[0]).x + 1;
+		tetris->id = id;
 		tetris->first = point[0];
 		if (!(tetris->shape = shape_piece(tetris->height, tetris->width)))
 		{
