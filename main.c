@@ -105,6 +105,7 @@ int					main(int ac, char **av)
 	int				file;
 	t_list			*pieces;
 	t_map			*map;
+	t_point			*first;
 	size_t			map_size;
 
 
@@ -118,6 +119,13 @@ int					main(int ac, char **av)
 		}
 		(*map).r = 0;
 		(*map).c = 0;
+		if(!(first = (t_point*)ft_memalloc(sizeof(*first) * 42)))
+		{
+			ft_putendl("setup_solve !first malloc");
+			return (0);
+		}
+		(*first).x = 0;
+		(*first).y = 0;
 		if (!(file = open(av[1], O_RDONLY)))
 		{
 			ft_putendl("\nmain !file = open");
@@ -129,13 +137,15 @@ int					main(int ac, char **av)
 			close(file);
 			return (0);
 		}
-		if (!(setup_solve(&pieces, map, 0)))
+		if (!(solve(&pieces, map, 0, first)))
 		{
-			while (!(setup_solve(&pieces, map, 0)))
+			while (!(solve(&pieces, map, 0, first)))
 			{
-				printf("map_size = %d\n", (int)(map_size));
+				//printf("map_size = %d\n", (int)(map_size));
 				free_map(&map);
 				map = create_map(map_size++);
+				first->y = 0;
+				first->x = 0;
 			}
 		}
 		ft_putstrarr(map->rows);

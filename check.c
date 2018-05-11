@@ -111,7 +111,7 @@ int					validate_piece(char *tet, int location, int	*sides)
 **	checking that it only contains 4 '#', '.', and '\n'
 **	for newlines it checks to see if it's the EOF and returns 0 if not
 */
-int					tet_check(char *tet, int rd, t_point **hash)
+int					tet_check(char *tet, int rd, t_point ***hash)
 {
 	int				location;
 	int				count;
@@ -131,7 +131,7 @@ int					tet_check(char *tet, int rd, t_point **hash)
 				ft_putendl("\ntet_check !validate_piece");
 				return (0);
 			}
-			set_minmax_points(hash, count, location, x_max);
+			set_minmax_points(hash, count, location, &x_max);
 			count++;
 		}
 		else if (tet[location] == '\n')
@@ -158,6 +158,7 @@ int					tet_check(char *tet, int rd, t_point **hash)
 	if (sides == 6 || sides == 8)
 	{
 		//ft_putendl("\ntet_check sides == 6 || sides == 8");
+		(*hash)[1]->x = x_max > (*hash)[1]->x ? x_max : (*hash)[1]->x;
 		return (1);
 	}
 	return (0);

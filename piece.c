@@ -73,8 +73,8 @@ t_etris			*make_piece(char *tet, int id)
 	t_etris		*tetris;
 	t_point		**point;
 
-	if (!tet || !(point = (t_point**)ft_memalloc(sizeof(*point) * 777))
-		|| !(*point = (t_point*)ft_memalloc(sizeof(point) * 777)))
+	if (!tet || !(point = (t_point**)ft_memalloc(sizeof(*point) * 42))
+		|| !(*point = (t_point*)ft_memalloc(sizeof(point) * 42)))
 	{
 		ft_putendl("\nmake_piece !tet || !point malloc");
 		return (0);
@@ -84,7 +84,7 @@ t_etris			*make_piece(char *tet, int id)
 	(point[0][1]).x = 0;
 	(point[0][1]).y = 0;
 
-	if (!(tet_check(tet, 21, point)))
+	if (!(tet_check(tet, 21, &point)))
 	{
 		ft_putendl("\nmake_piece !tet_check");
 		return (0);
@@ -96,6 +96,10 @@ t_etris			*make_piece(char *tet, int id)
 		tetris->width = (*point[1]).x - (*point[0]).x + 1;
 		tetris->id = id;
 		tetris->first = point[0];
+		printf("\nmake_piece tetris->first->y = %d\n", tetris->first->y);
+		printf("\nmake_piece tetris->first->x = %d\n\n", tetris->first->x);
+		// tetris->first->y = (*point[0]).y;
+		// tetris->first->x = (*point[0]).x;
 		if (!(tetris->shape = shape_piece(tetris->height, tetris->width)))
 		{
 			ft_putendl("\nmake_piece !shape_piece");

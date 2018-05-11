@@ -14,14 +14,14 @@
 #include "libft/libft.h"
 #include <stdio.h>
 
-int						setup_solve(t_list **pieces, t_map *map, int count)
+int			solve(t_list **pieces, t_map *map, int count, t_point *first)
 {
-	int					dim;
+	int		dim;
 
 	dim = (int)map->size - 1;
 	if ((*pieces) == NULL)
 	{
-		ft_putendl("\netup_solve (*pieces) ==  NULL\n");
+		ft_putendl("\nsolve (*pieces) ==  NULL\n");
 		return (1);
 	}
 	while (map->c < dim)
@@ -34,16 +34,16 @@ int						setup_solve(t_list **pieces, t_map *map, int count)
 			// ft_putendl("\n");
 			if (check_tet_fits((t_etris*)(*pieces)->cont, map))
 			{
-				tet_place((t_etris*)(*pieces)->cont, map);
+				tet_place((t_etris*)(*pieces)->cont, map, first);
 				count++;
 				// ft_putstrarr(map->rows);
 				// ft_putendl("\n");
-				if (setup_solve(&((*pieces)->next), map, count))
+				if (solve(&((*pieces)->next), map, count, first))
 				{
 					//ft_putendl("setup_solve recursion return 1");
 					return (1);
 				}
-				tet_remove(pieces, map, count - 1);
+				tet_remove(pieces, map, count - 1, first);
 			}
 			map->r++;
 		}
