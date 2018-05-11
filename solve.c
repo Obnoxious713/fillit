@@ -14,14 +14,14 @@
 #include "libft/libft.h"
 #include <stdio.h>
 
-int						setup_solve(t_list **pieces, t_map *map)
+int						setup_solve(t_list **pieces, t_map *map, int count)
 {
 	int					dim;
 
-	dim = (int)map->size;
+	dim = (int)map->size - 1;
 	if ((*pieces) == NULL)
 	{
-		ft_putendl("setup_solve (*pieces) ==  NULL");
+		ft_putendl("\netup_solve (*pieces) ==  NULL\n");
 		return (1);
 	}
 	while (map->c < dim)
@@ -29,22 +29,27 @@ int						setup_solve(t_list **pieces, t_map *map)
 		map->r = 0;
 		while (map->r < dim)
 		{
+			// ft_putendl("setup solve list_elem");
+			// ft_putstrarr(((t_etris*)(*pieces)->cont)->shape);
+			// ft_putendl("\n");
 			if (check_tet_fits((t_etris*)(*pieces)->cont, map))
 			{
 				tet_place((t_etris*)(*pieces)->cont, map);
-				ft_putstrarr(map->rows);
-				if (setup_solve(&((*pieces)->next), map))
+				count++;
+				// ft_putstrarr(map->rows);
+				// ft_putendl("\n");
+				if (setup_solve(&((*pieces)->next), map, count))
 				{
-					ft_putendl("setup_solve recursion return 1");
+					//ft_putendl("setup_solve recursion return 1");
 					return (1);
 				}
-				tet_remove((t_etris*)(*pieces)->cont, map);
+				tet_remove(pieces, map, count - 1);
 			}
 			map->r++;
 		}
 		map->c++;
 	}
-	ft_putendl("setup_solve return 0");
+	//ft_putendl("setup_solve return 0");
 	return (0);
 }
 

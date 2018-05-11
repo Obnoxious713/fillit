@@ -30,14 +30,14 @@ int				check_tet_fits(t_etris *tetris, t_map *map)
 	y = -1;
 	r = map->r;
 	c = map->c;
-	ft_putstrarr(tetris->shape);
+	//ft_putstrarr(tetris->shape);
 	while (tetris->shape[++y] != NULL)
 	{
-		//printf("\ny = %d\n\n", y);
+		//printf("\nctf y = %d\n\n", y);
 		x = -1;
 		while (tetris->shape[y][++x] != '\0')
 		{
-			//printf("\nx = %d\n\n", x);
+			//printf("\nctf x = %d\n\n", x);
 			if (tetris->shape[y][x] != '.')
 			{
 				if (check_safe(map, y, x))
@@ -47,7 +47,7 @@ int				check_tet_fits(t_etris *tetris, t_map *map)
 				}
 				else
 				{
-					ft_putendl("\ncheck_tet_fits !check_safe");
+				//	ft_putendl("\ncheck_tet_fits !check_safe");
 					return (0);
 				}
 			}
@@ -70,12 +70,14 @@ int				check_safe(t_map *map, int y, int x)
 
 	c = map->c;
 	r = map->r;
-	if (map->rows[c + y][r + x] == '.')
+	//printf("c = %d\n\nr = %d\n\n\ny = %d\n\nx = %d\n\n\n\n", c, r, y, x);
+//	printf("%d\n", (int)map->size);
+	if (c + y < (int)map->size)
 	{
-		printf("c = %d\n\ny = %d\n\nr = %d\n\nx = %d\n\n", c, y, r, x);
-		return (1);
+		if (map->rows[c + y][r + x] == '.')
+			return (1);
 	}
-	ft_putendl("check_safe return 0");
+	//ft_putendl("check_safe return 0");
 	return (0);
 }
 
@@ -155,7 +157,7 @@ int					tet_check(char *tet, int rd, t_point **hash)
 	}
 	if (sides == 6 || sides == 8)
 	{
-		ft_putendl("\ntet_check sides == 6 || sides == 8");
+		//ft_putendl("\ntet_check sides == 6 || sides == 8");
 		return (1);
 	}
 	return (0);

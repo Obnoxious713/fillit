@@ -72,11 +72,11 @@ char				**make_empty_map(size_t size);
 void 				free_map(t_map **map);
 
 int					solve(t_list *pieces);
-int					setup_solve(t_list **pieces, t_map *map);
+int					setup_solve(t_list **pieces, t_map *map, int count);
 int					solve_map(t_map *map, t_list **pieces);
 
 void 				tet_place(t_etris* tetris, t_map *map);
-void 				tet_remove(t_etris* tetris, t_map *map);
+void 				tet_remove(t_list **pieces, t_map *map, int count);
 int					check_tet_max(t_etris *tetris, t_map *map, t_point *point);
 int					tet_x_shift(t_etris *tetris);
 

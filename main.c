@@ -129,12 +129,14 @@ int					main(int ac, char **av)
 			close(file);
 			return (0);
 		}
-		while (!(setup_solve(&pieces, map)))
+		if (!(setup_solve(&pieces, map, 0)))
 		{
-			printf("map_size = %d\n", (int)(map_size));
-			free_map(&map);
-			map = create_map(map_size++);
-
+			while (!(setup_solve(&pieces, map, 0)))
+			{
+				printf("map_size = %d\n", (int)(map_size));
+				free_map(&map);
+				map = create_map(map_size++);
+			}
 		}
 		ft_putstrarr(map->rows);
 	}

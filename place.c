@@ -48,23 +48,7 @@ int				check_tet_max(t_etris *tetris, t_map *map, t_point *point)
 //
 // }
 
-void 			map_next(t_map *map)
-{
-	int			c;
-	int			r;
-	int			dim;
 
-	c = map->c;
-	r = map->r;
-	dim = (int)map->size;
-	if (r >= dim)
-	{
-		r = 0;
-		c += 1;
-	}
-	else
-		r += 1;
-}
 
 /*
 **	tet_place() iterates through the shape setting the board pos to the
@@ -87,7 +71,7 @@ void 			tet_place(t_etris* tetris, t_map *map)
 		while (tetris_shape[y][++x] != '\0')
 		{
 			if (tetris_shape[y][x] != '.')
-				board[map->c + y][map->r - tet_x_shift(tetris) + x]
+				board[map->c + y][map->r + x]
 				= tetris_shape[y][x];
 		}
 	}
@@ -97,25 +81,65 @@ void 			tet_place(t_etris* tetris, t_map *map)
 **	tet_remove() iterates throught the shape setting the board pos to
 **	'.'	if the tetris_shape != '.'
 */
-void 			tet_remove(t_etris* tetris, t_map *map)
+
+
+int 			map_next(t_map *map)
 {
-	// removes
-	// moves the board to the next pos
-		// r + 1 || (c + 1 && r = 0)
+	int			c;
+	int			r;
+	int			dim;
+
+	c = map->c;
+	r = map->r;
+	dim = (int)map->size;
+	if (r > dim)
+	{
+		map->r = 0;
+		map->c += 1;
+	}
+	else
+	{
+		map->r += 1;
+	}
+	if (c < dim)
+		return (1);
+	return (0);
+}
+
+
+
+void 			tet_remove(t_list **pieces, t_map *map, int count)
+{
+	int			i;
 	int			r;
 	int			c;
 	char		**board;
 
 	c = -1;
 	board = map->rows;
+	ft_putendl("\nbefor\n");
+	ft_putstrarr(board);
+	ft_putendl("\n");
+	printf("\ncount + 'A' = %d\n\n", count + 'A');
 	while (board[++c] != NULL)
 	{
 		r = -1;
 		while (board[c][++r] != '\0')
 		{
-			if (board[c][r] == tetris->id)
+			if (board[c][r] == (count + 'A'))
 				board[c][r] = '.';
 		}
+	}
+	ft_putendl("\nafter\n");
+	ft_putstrarr(board);
+	ft_putendl("\n");
+	i = -1;
+	while (++i < count - 1)
+	{
+		ft_putendl("list_elem remove count - 1");
+		ft_putstrarr(((t_etris*)(*pieces)->cont)->shape);
+		ft_putendl("\n");
+		*pieces = (*pieces)->next;
 	}
 	map_next(map);
 }

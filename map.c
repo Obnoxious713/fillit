@@ -82,5 +82,6 @@ t_map				*create_map(size_t size)
 		}
 		map->size = size;
 	}
+	ft_putstrarr(map->rows);
 	return (map);
 }
