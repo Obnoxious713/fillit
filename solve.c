@@ -14,99 +14,122 @@
 #include "libft/libft.h"
 #include <stdio.h>
 
-int			solve(t_list **pieces, t_map *map, int count, t_point *first)
+// void 			free_tetris(t_etris *tetris)
+// {
+//
+// }
+
+/*
+**	part of problem
+**		when the map isn't reset and the same piece is placed again
+**			count still increases
+*/
+//
+// int 			map_next(t_map *map)
+// {
+// 	int			c;
+// 	int			r;
+// 	int			dim;
+//
+// 	c = map->c;
+// 	r = map->r;
+// 	dim = (int)map->size + 1;
+// 	if (r > dim)
+// 	{
+// 		map->r = 0;
+// 		map->c += 1;
+// 	}
+// 	if (c < dim)
+// 		return (1);
+// 	return (0);
+// }
+
+void 			tet_place(t_etris *tetris, t_map *map, t_point *first)
 {
+	int			y;
+	int			x;
+	char		**board;
+	char		**tetris_shape;
+
+	y = -1;
+	board = map->rows;
+	tetris_shape = tetris->shape;
+	while (tetris_shape[++y] != NULL)
+	{
+		x = -1;
+		while (tetris_shape[y][++x] != '\0')
+		{
+			if (tetris_shape[y][x] != '.')
+			{
+				board[map->c + y][map->r + x]
+				= tetris_shape[y][x];
+			}
+		}
+	}
+	ft_putendl("\nafter tet_place");
+	ft_putstrarr(map->rows);
+	ft_putendl("");
+	tetris.first->y = map->c + y;
+	tetris.first->y = map->r + x
+}
+
+void 			tet_remove(t_etris *tetris, t_map *map, t_point *first)
+{
+	int			r;
+	int			c;
+	int			id;
+	int			i;
+	char		**board;
+
+	c = -1;
+	i = 0;
+	id = 0;
+	board = map->rows;
+	while (tetris->shape[0][i] == '.')
+		i++;
+	id = tetris->shape[0][i + 1];
+	printf("%d\n", id);
+	while (board[++c] != NULL)
+	{
+		r = -1;
+		while (board[c][++r] != '\0')
+		{
+			if (board[c][r] == id)
+				board[c][r] = '.';
+		}
+	}
+	ft_putendl("\nafter tet_remove");
+	ft_putstrarr(map->rows);
+	ft_putendl("\n\n");
+	map->c = first->y;
+	map->r = first->x + 1;
+}
+
+int			solve(t_list **pieces, t_map *map, t_point *first)
+{
+	int		i;
 	int		dim;
 
+	i = -1;
 	dim = (int)map->size - 1;
-	if ((*pieces) == NULL)
-	{
-		ft_putendl("\nsolve (*pieces) ==  NULL\n");
+	if (*pieces == NULL)
 		return (1);
-	}
 	while (map->c < dim)
 	{
 		map->r = 0;
 		while (map->r < dim)
 		{
-			// ft_putendl("setup solve list_elem");
-			// ft_putstrarr(((t_etris*)(*pieces)->cont)->shape);
-			// ft_putendl("\n");
-			if (check_tet_fits((t_etris*)(*pieces)->cont, map))
+			if (check_tet_fits((t_etris*)(*pieces)->cont, map))//, first))
 			{
 				tet_place((t_etris*)(*pieces)->cont, map, first);
-				count++;
-				// ft_putstrarr(map->rows);
-				// ft_putendl("\n");
-				if (solve(&((*pieces)->next), map, count, first))
-				{
-					//ft_putendl("setup_solve recursion return 1");
+				if (!(solve(&((*pieces)->next), map, first)))
+					tet_remove((t_etris*)(*pieces)->cont, map, first);
+				else
 					return (1);
-				}
-				tet_remove(pieces, map, count - 1, first);
 			}
 			map->r++;
 		}
 		map->c++;
 	}
-	//ft_putendl("setup_solve return 0");
 	return (0);
 }
-
-// int					solve_map(t_map *map, t_list **pieces)
-// {
-// 	int				fit;
-//
-// 	fit = 0;
-// 	if (!pieces || !*pieces)
-// 	{
-// 		ft_putendl("\nsolve_map !pieces || !*pieces");
-// 		return (0);
-// 	}
-// 	while (!(fit = check_tet_fits((t_etris*)(*pieces)->cont, map)))
-// 	{
-// 		ft_putendl("\nsolve_map !check_tet_fits");
-// 		return (0);
-// 	}
-// 	if (!fit)
-// 	{
-// 		ft_putendl("\nsolve_map !fit");
-// 		return (0);
-// 	}
-// 	tet_place((t_etris*)(*pieces)->cont, map);
-// 	if (!(solve_map(map, &((*pieces)->next))))
-// 	{
-// 		ft_putendl("\nsolve_map !solve_map: tet_remove called");
-// 		tet_remove((t_etris*)(*pieces)->cont, map);
-// 		return (solve_map(map, pieces));
-// 	}
-// 	return (1);
-// }
-//
-// /*
-// **	map_solve() is called until (*pieces) is NULL
-// **	it calls check_tet_fits and places the tet on the map if it does
-// **	it then calls map_solve() again with the next piece
-// **	if that fails it removes the last tet
-// */
-// int					setup_solve(t_list **pieces, t_map *map)
-// {
-// 	t_list			*last_piece;
-// 	size_t			map_size;
-//
-//
-// 	while ((last_piece = *pieces)
-// 		&& !(solve_map(map, &last_piece)))
-// 	{
-// 		free_map(&map);
-// 		if (!(map = create_map(++map_size)))
-// 		{
-// 			ft_putendl("\nsetup_solve !create_map");
-// 			return (0);
-// 		}
-// 	}
-// 	ft_putstrarr(map->rows);
-// 	free_map(&map);
-// 	free(map);
-// 	return (1);
-// }

@@ -18,10 +18,6 @@
 #include "libft/libft.h"
 #include <stdio.h>
 
-/*
-**	error_ret() takes a flag (-1, 0, 1, 2) and prints the error accordingly
-**	if none of those flags are passed it prints error
-*/
 static int			error_ret(int flag)
 {
 	if (!flag)
@@ -35,27 +31,10 @@ static int			error_ret(int flag)
 	else if (flag == -1)
 		ft_putendl("\ncould not open file");
 	if (flag && flag != 1)
-	{
 		ft_putendl("\nusage: fillit [input_file]");
-		ft_putendl("	input_file:");
-		ft_putendl("		- contains between 1 and 26 tetriminos");
-		ft_putendl("		- exactly 4 lines of 4 chars and a newline");
-		ft_putendl("		- '#', '.', '\\n' only");
-		ft_putendl("		- '\\n' following each tetrimino unless EOF");
-		ft_putendl("		- each '#' must touch another on at least 1 side");
-	}
 	return (flag);
 }
 
-
-/*
-**	read_file() reads the file 21 characters at a time
-**	it then null terminates the string by setting the 21st char to 0
-**	it checks that there are no more than 26 pieces being passed in,
-**	that each piece is a valid tetrimino,
-**	and then tries to add that piece to a list
-**	if read reaches the EOF then it stores the final tetrimino and calls solve
-*/
 t_list				*read_file(t_list **pieces, int file)
 {
 	int				rd;
@@ -73,33 +52,20 @@ t_list				*read_file(t_list **pieces, int file)
 	{
 		tet[BUF - 1] = 0;
 		if (p_nbr >= 26	|| (!(tet_lstadd(&start, &end, tet, p_nbr) == 1)))
-		{
-			ft_putendl("\nread_file p_nbr >= 26 || !pieces[p_nbr] = tet_lstadd");
 			return (0);
-		}
 		p_nbr++;
 	}
 	if (rd == BUF - 1)// EOF
 	{
 		if (p_nbr >= 26	|| (!(tet_lstadd(&start, &end, tet, p_nbr) == 1)))
-		{
-			ft_putendl("\nread_file p_nbr >= 26 || !pieces[p_nbr] = tet_lstadd");
 			return (0);
-		}
 		p_nbr++;
 	}
 	else
-	{
-		ft_putendl("\nread_file else called");
 		return (0);
-	}
 	return (start);
 }
 
-/*
-**	main() checks for 1 arg (ac == 2) and returns an error if it's false
-**	if it's true attempts to open the file and pass it into read_file to be read
-*/
 int					main(int ac, char **av)
 {
 	int				file;
@@ -108,45 +74,30 @@ int					main(int ac, char **av)
 	t_point			*first;
 	size_t			map_size;
 
-
 	if (ac == 2)
 	{
 		map_size = 2;
 		if (!(map = create_map(map_size)))
-		{
-			ft_putendl("\nsetup_solve !map");
 			return (0);
-		}
 		(*map).r = 0;
 		(*map).c = 0;
 		if(!(first = (t_point*)ft_memalloc(sizeof(*first) * 42)))
-		{
-			ft_putendl("setup_solve !first malloc");
 			return (0);
-		}
 		(*first).x = 0;
 		(*first).y = 0;
 		if (!(file = open(av[1], O_RDONLY)))
-		{
-			ft_putendl("\nmain !file = open");
 			return (error_ret(-1));
-		}
 		if (!(pieces = read_file(&pieces, file)))
 		{
-			ft_putendl("\nmain !pieces = read_file");
 			close(file);
 			return (0);
 		}
-		if (!(solve(&pieces, map, 0, first)))
+		while (!(solve(&pieces, map, first)))
 		{
-			while (!(solve(&pieces, map, 0, first)))
-			{
-				//printf("map_size = %d\n", (int)(map_size));
-				free_map(&map);
-				map = create_map(map_size++);
-				first->y = 0;
-				first->x = 0;
-			}
+			free_map(&map);
+			map = create_map(map_size++);
+			first->y = 0;
+			first->x = 0;
 		}
 		ft_putstrarr(map->rows);
 	}

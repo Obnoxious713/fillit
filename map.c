@@ -19,26 +19,16 @@ void 				free_map(t_map **map)
 	size_t			row;
 
 	if (!map)
-	{
-		ft_putendl("\nfree_map !map");
 		return ;
-	}
 	row = 0;
 	while (row < (*map)->size)
 		ft_strdel(&((*map)->rows[row++]));
 	free((*map)->rows);
 	(*map)->rows = NULL;
-	(*map)->c = 0;
-	(*map)->r = 0;
 	free(*map);
 	*map = NULL;
 }
 
-/*
-**	map_empty_map() iterates through the 2d arr map one row at a time
-**	creating a new str and setting it to '.'
-**	map is freed and the str is deleted if it fails
-*/
 char				**make_empty_map(size_t size)
 {
 	char			**map;
@@ -51,7 +41,6 @@ char				**make_empty_map(size_t size)
 		{
 			if (!(map[i] = ft_strnew(size)))
 			{
-				ft_putendl("\nmake_empty_map !ft_strnew");
 				while (--i)
 					ft_strdel(&map[i]);
 				free(map);
@@ -63,25 +52,18 @@ char				**make_empty_map(size_t size)
 	return (map);
 }
 
-/*
-**	create_map() takes a size (the dim) and sets the map->rows to an empty map
-**	if it fails, it frees the map and returns null.
-**	it then sets map->size to size
-*/
 t_map				*create_map(size_t size)
 {
 	t_map			*map;
 
 	if ((map = (t_map*)ft_memalloc(sizeof(*map))))
 	{
-		if (!(map->rows = make_empty_map(size)))
+		if (!(map->rows = make_empty_map(size)) && !(map->save = map->rows))
 		{
-			ft_putendl("\ncreate_map !make_empty_map");
 			free(map);
-			return (NULL);
+			return (0);
 		}
 		map->size = size;
 	}
-	//ft_putstrarr(map->rows);
 	return (map);
 }
