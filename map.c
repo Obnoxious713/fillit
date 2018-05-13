@@ -60,7 +60,7 @@ t_map				*create_map(size_t size)
 	{
 		(*map).r = 0;
 		(*map).c = 0;
-		if (!(map->rows = make_empty_map(size)) && !(map->save = map->rows))
+		if (!(map->rows = make_empty_map(size)))
 		{
 			free(map);
 			return (0);

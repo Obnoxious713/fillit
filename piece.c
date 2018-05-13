@@ -76,6 +76,8 @@ t_etris			*make_piece(char *tet, int id)
 		if (!(tetris->shape = shape_piece(tetris->height, tetris->width)))
 			return (0);
 		fill_piece(tet, id, tetris);
+		ft_putstrarr(tetris->shape);
+		ft_putendl("");
 	}
 	return (tetris);
 }

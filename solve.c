@@ -19,25 +19,25 @@
 //
 // }
 
-//
-// int 			map_next(t_map *map)
-// {
-// 	int			c;
-// 	int			r;
-// 	int			dim;
-//
-// 	c = map->c;
-// 	r = map->r;
-// 	dim = (int)map->size + 1;
-// 	if (r > dim)
-// 	{
-// 		map->r = 0;
-// 		map->c += 1;
-// 	}
-// 	if (c < dim)
-// 		return (1);
-// 	return (0);
-// }
+
+int 			map_next(t_map *map)
+{
+	int			c;
+	int			r;
+	int			dim;
+
+	c = map->c;
+	r = map->r;
+	dim = (int)map->size + 1;
+	if (r > dim)
+	{
+		map->r = 0;
+		map->c += 1;
+	}
+	if (c < dim)
+		return (1);
+	return (0);
+}
 
 void 			tet_place(t_etris *tetris, t_map *map, t_point *first)
 {
@@ -49,6 +49,9 @@ void 			tet_place(t_etris *tetris, t_map *map, t_point *first)
 	y = -1;
 	board = map->rows;
 	tetris_shape = tetris->shape;
+	ft_putstrarr(tetris->shape);
+	printf("\nwidth = %d\n height = %d\n", tetris->width, tetris->height);
+	printf("\nsize = %zu\n", map->size);
 	while (tetris_shape[++y] != NULL)
 	{
 		x = -1;
@@ -83,7 +86,7 @@ void 			tet_remove(t_etris *tetris, t_map *map, t_point *first)
 	while (tetris->shape[0][++i] == '.')
 		;
 	id = tetris->shape[0][i];
-	printf("%d\n", id);
+	// printf("%d\n", id);
 	while (board[++c] != NULL)
 	{
 		r = -1;
@@ -104,11 +107,18 @@ int			solve(t_list **pieces, t_map *map, t_point *first)
 {
 	int		found;
 	int		dim;
+	t_list	**pc;
 
 	found = 0;
+	pc = pieces;
 	dim = (int)map->size - 1;
 	if (!pieces || !*pieces)
 		return (1);
+	// while ((*pc) != NULL)
+	// {
+	// 	ft_putstrarr(((t_etris*)(*pc)->cont)->shape);
+	// 	pc++;
+	// }
 	while (map->c < dim)
 	{
 		map->r = 0;
@@ -117,9 +127,12 @@ int			solve(t_list **pieces, t_map *map, t_point *first)
 			if (check_tet_fits((t_etris*)(*pieces)->cont, map))//, first))
 			{
 				tet_place((t_etris*)(*pieces)->cont, map, first);
+				map->r = 0;
+				map->c = 0;
 				if (solve(&((*pieces)->next), map, first))
 					return (1);
 				tet_remove((t_etris*)(*pieces)->cont, map, first);
+				map_next(map);
 			}
 			map->r++;
 		}

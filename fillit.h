@@ -38,7 +38,6 @@ typedef struct			s_map
 	char				**rows;
 	int					r;
 	int					c;
-	char				**save;
 	size_t				size;
 }						t_map;
 
