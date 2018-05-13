@@ -58,6 +58,8 @@ t_map				*create_map(size_t size)
 
 	if ((map = (t_map*)ft_memalloc(sizeof(*map))))
 	{
+		(*map).r = 0;
+		(*map).c = 0;
 		if (!(map->rows = make_empty_map(size)) && !(map->save = map->rows))
 		{
 			free(map);

@@ -14,6 +14,30 @@
 #include "libft/libft.h"
 #include <stdio.h>
 
+int					next_point(t_point **first, t_map *map)
+{
+	int				fc;
+	int				fr;
+	char			**board;
+
+	fc = (*first)->y;
+	fr = (*first)->x;
+	board = map->rows;
+	fr += 1;
+	while (board[fc] != NULL)
+	{
+		while (board[fc][fr] != '\0')
+		{
+			if (board[fc][fr] == '.')
+				return (1);
+			fr += 1;
+		}
+		fc += 1;
+		fr = 0;
+	}
+	return (0);
+}
+
 t_point				*create_point(int location)
 {
 	t_point			*point;

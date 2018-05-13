@@ -19,11 +19,6 @@
 //
 // }
 
-/*
-**	part of problem
-**		when the map isn't reset and the same piece is placed again
-**			count still increases
-*/
 //
 // int 			map_next(t_map *map)
 // {
@@ -69,8 +64,8 @@ void 			tet_place(t_etris *tetris, t_map *map, t_point *first)
 	ft_putendl("\nafter tet_place");
 	ft_putstrarr(map->rows);
 	ft_putendl("");
-	tetris.first->y = map->c + y;
-	tetris.first->y = map->r + x
+	first->y = map->c;
+	first->x = map->r;
 }
 
 void 			tet_remove(t_etris *tetris, t_map *map, t_point *first)
@@ -82,12 +77,12 @@ void 			tet_remove(t_etris *tetris, t_map *map, t_point *first)
 	char		**board;
 
 	c = -1;
-	i = 0;
+	i = -1;
 	id = 0;
 	board = map->rows;
-	while (tetris->shape[0][i] == '.')
-		i++;
-	id = tetris->shape[0][i + 1];
+	while (tetris->shape[0][++i] == '.')
+		;
+	id = tetris->shape[0][i];
 	printf("%d\n", id);
 	while (board[++c] != NULL)
 	{
@@ -107,12 +102,12 @@ void 			tet_remove(t_etris *tetris, t_map *map, t_point *first)
 
 int			solve(t_list **pieces, t_map *map, t_point *first)
 {
-	int		i;
+	int		found;
 	int		dim;
 
-	i = -1;
+	found = 0;
 	dim = (int)map->size - 1;
-	if (*pieces == NULL)
+	if (!pieces || !*pieces)
 		return (1);
 	while (map->c < dim)
 	{
@@ -122,10 +117,9 @@ int			solve(t_list **pieces, t_map *map, t_point *first)
 			if (check_tet_fits((t_etris*)(*pieces)->cont, map))//, first))
 			{
 				tet_place((t_etris*)(*pieces)->cont, map, first);
-				if (!(solve(&((*pieces)->next), map, first)))
-					tet_remove((t_etris*)(*pieces)->cont, map, first);
-				else
+				if (solve(&((*pieces)->next), map, first))
 					return (1);
+				tet_remove((t_etris*)(*pieces)->cont, map, first);
 			}
 			map->r++;
 		}

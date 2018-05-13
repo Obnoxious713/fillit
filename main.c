@@ -73,14 +73,13 @@ int					main(int ac, char **av)
 	t_map			*map;
 	t_point			*first;
 	size_t			map_size;
+	t_list			*lst_tail;
 
 	if (ac == 2)
 	{
 		map_size = 2;
 		if (!(map = create_map(map_size)))
 			return (0);
-		(*map).r = 0;
-		(*map).c = 0;
 		if(!(first = (t_point*)ft_memalloc(sizeof(*first) * 42)))
 			return (0);
 		(*first).x = 0;
@@ -92,7 +91,7 @@ int					main(int ac, char **av)
 			close(file);
 			return (0);
 		}
-		while (!(solve(&pieces, map, first)))
+		while ((lst_tail = pieces) && !(solve(&pieces, map, first)))
 		{
 			free_map(&map);
 			map = create_map(map_size++);
