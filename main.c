@@ -66,12 +66,23 @@ t_list				*read_file(t_list **pieces, int file)
 	return (start);
 }
 
+void 				reset_pieces(t_list **pieces)
+{
+	while (*pieces)
+	{
+		(*pieces)->first->x = 0;
+		(*pieces)->first->y = 0;
+		(*pieces)->last->x = 0;
+		(*pieces)->last->y = 0;
+	}
+}
+
 int					main(int ac, char **av)
 {
 	int				file;
 	t_list			*pieces;
 	t_map			*map;
-	t_point			*first;
+	t_point			*point;
 	size_t			map_size;
 	t_list			*lst_tail;
 
@@ -85,10 +96,10 @@ int					main(int ac, char **av)
 		map_size = 2;
 		if (!(map = create_map(map_size)))
 			return (0);
-		if(!(first = (t_point*)ft_memalloc(sizeof(*first) * 42)))
+		if(!(point = (t_point*)ft_memalloc(sizeof(*point) * 42)))
 			return (0);
-		(*first).x = 0;
-		(*first).y = 0;
+		(*point).x = 0;
+		(*point).y = 0;
 		if (!(file = open(av[1], O_RDONLY)))
 			return (error_ret(-1));
 		if (!(pieces = read_file(&pieces, file)))
@@ -96,12 +107,13 @@ int					main(int ac, char **av)
 			close(file);
 			return (0);
 		}
-		while ((lst_tail = pieces) && !(solve(&pieces, map, first)))
+		while ((lst_tail = pieces) && !(solve(&pieces, map, point)))
 		{
 			free_map(&map);
 			map = create_map(map_size++);
-			first->y = 0;
-			first->x = 0;
+			point->y = 0;
+			point->x = 0;
+			reset_pieces(pieces)
 		}
 		ft_putstrarr(map->rows);
 	}

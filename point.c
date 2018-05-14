@@ -14,14 +14,14 @@
 #include "libft/libft.h"
 #include <stdio.h>
 
-int					next_point(t_point **first, t_map *map)
+int					next_point(t_point **point, t_map *map)
 {
 	int				fc;
 	int				fr;
 	char			**board;
 
-	fc = (*first)->y;
-	fr = (*first)->x;
+	fc = (*point)->y;
+	fr = (*point)->x;
 	board = map->rows;
 	fr += 1;
 	while (board[fc] != NULL)
