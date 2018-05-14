@@ -66,16 +66,16 @@ t_list				*read_file(t_list **pieces, int file)
 	return (start);
 }
 
-void 				reset_pieces(t_list **pieces)
-{
-	while (*pieces)
-	{
-		(*pieces)->first->x = 0;
-		(*pieces)->first->y = 0;
-		(*pieces)->last->x = 0;
-		(*pieces)->last->y = 0;
-	}
-}
+// void 				reset_pieces(t_list **pieces)
+// {
+// 	while (*pieces)
+// 	{
+// 		(*pieces)->first->x = 0;
+// 		(*pieces)->first->y = 0;
+// 		(*pieces)->last->x = 0;
+// 		(*pieces)->last->y = 0;
+// 	}
+// }
 
 int					main(int ac, char **av)
 {
@@ -113,7 +113,7 @@ int					main(int ac, char **av)
 			map = create_map(map_size++);
 			point->y = 0;
 			point->x = 0;
-			reset_pieces(pieces)
+			//reset_pieces(pieces);
 		}
 		ft_putstrarr(map->rows);
 	}

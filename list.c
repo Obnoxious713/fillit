@@ -20,7 +20,7 @@ void 			free_tetris(t_etris **tetris)
 
 	if (!tetris)
 		return ;
-	free_point(&((*tetris)->first));
+	// free_point(&((*tetris)->first));
 	if ((*tetris)->shape)
 	{
 		height = 0;

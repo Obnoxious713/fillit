@@ -20,7 +20,7 @@ void 			fill_piece(char *tet, char id, t_etris *tetris)
 	int					y;
 
 	y = -1;
-	x = tetris->first->x + tetris->first->y * 5;
+	x = tetris->first.x + tetris->first.y * 5;
 	while (++y < tetris->height)
 	{
 		ft_memcpy(tetris->shape[y], &tet[x], tetris->width);
@@ -78,7 +78,7 @@ t_etris			*make_piece(char *tet, int id)
 		tetris->width = (*point[1]).x - (*point[0]).x + 1;
 		// printf("tetris->width == (*point[1]).x = %d - (*point[0]).x = %d + 1 == %d\n\n", (*point[1]).x, (*point[0]).x, (*point[1]).x - (*point[0]).x + 1);
 		tetris->id = id;
-		tetris->first = point[0];
+		tetris->first = *point[0];
 		if (!(tetris->shape = shape_piece(tetris->height, tetris->width)))
 			return (0);
 		// printf("\ntet height = %d\ntet width = %d\ntet id = %d\n", tetris->height, tetris->width, tetris->id);
@@ -95,15 +95,15 @@ t_etris			*make_piece(char *tet, int id)
 		point[0][1].y = 0;
 		tet_to_tetris(tetris, point);
 		// ft_putendl("the NEW height and width of the SHAPED tetris piece");
-		tetris->height = (*point[1]).y;
+		tetris->height = (*point[1]).y - 1;
 		// printf("NEW tetris height == (*point[1]).y = %d\n", (*point[1]).y);
 		tetris->width = (*point[1]).x;
 		// printf("NEW tetris width == (*point[1]).x = %d\n\n", (*point[1]).x);
 		tetris->id = id;
 		// printf("'NEW' tetris id = %d\n", tetris->id);
-		tetris->first = point[0];
+		tetris->first = *point[0];
 		// printf("NEW tetris first y = %d\ntetris first x = %d\n\n", tetris->first->y, tetris->first->x);
-		tetris->last = point[1];
+		tetris->last = *point[1];
 		// printf("NEW tetris last y = %d\ntetris last x = %d\n\n", tetris->last->y, tetris->last->x);
 	}
 	return (tetris);

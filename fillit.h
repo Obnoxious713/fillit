@@ -30,8 +30,8 @@ typedef struct			s_etris
 	int					width; // most tetrimino dims (2, 3) (3, 2)
 	int					height; // only one possible fit in (1, 4) (4, 1) (2, 2)
 	int					id;
-	t_point				*first;
-	t_point				*last;
+	t_point				first;
+	t_point				last;
 }						t_etris;
 
 typedef struct			s_map
