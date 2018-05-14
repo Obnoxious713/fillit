@@ -14,12 +14,6 @@
 #include "libft/libft.h"
 #include <stdio.h>
 
-// void 			free_tetris(t_etris *tetris)
-// {
-//
-// }
-
-
 int 			map_next(t_map *map)
 {
 	int			c;
@@ -46,12 +40,14 @@ void 			tet_place(t_etris *tetris, t_map *map, t_point *first)
 	char		**board;
 	char		**tetris_shape;
 
+	ft_putendl("\n*******TET_PLACE*******\n");
 	y = -1;
 	board = map->rows;
 	tetris_shape = tetris->shape;
+	ft_putendl("tetris piece to be placed:");
 	ft_putstrarr(tetris->shape);
-	printf("\nwidth = %d\n height = %d\n", tetris->width, tetris->height);
-	printf("\nsize = %zu\n", map->size);
+	printf("\npiece width = %d\npiece height = %d\n", tetris->width, tetris->height);
+	printf("map size = %zu\n", map->size);
 	while (tetris_shape[++y] != NULL)
 	{
 		x = -1;
@@ -64,7 +60,7 @@ void 			tet_place(t_etris *tetris, t_map *map, t_point *first)
 			}
 		}
 	}
-	ft_putendl("\nafter tet_place");
+	ft_putendl("\nthe board after the piece is placed");
 	ft_putstrarr(map->rows);
 	ft_putendl("");
 	first->y = map->c;
@@ -79,6 +75,7 @@ void 			tet_remove(t_etris *tetris, t_map *map, t_point *first)
 	int			i;
 	char		**board;
 
+	ft_putendl("\n*******TET_REMOVE*******\n");
 	c = -1;
 	i = -1;
 	id = 0;
@@ -86,7 +83,7 @@ void 			tet_remove(t_etris *tetris, t_map *map, t_point *first)
 	while (tetris->shape[0][++i] == '.')
 		;
 	id = tetris->shape[0][i];
-	// printf("%d\n", id);
+	printf("tetris id to be removed = %d\n", id);
 	while (board[++c] != NULL)
 	{
 		r = -1;
@@ -96,7 +93,7 @@ void 			tet_remove(t_etris *tetris, t_map *map, t_point *first)
 				board[c][r] = '.';
 		}
 	}
-	ft_putendl("\nafter tet_remove");
+	ft_putendl("\nthe board after the piece is removed");
 	ft_putstrarr(map->rows);
 	ft_putendl("\n\n");
 	map->c = first->y;
@@ -105,26 +102,21 @@ void 			tet_remove(t_etris *tetris, t_map *map, t_point *first)
 
 int			solve(t_list **pieces, t_map *map, t_point *first)
 {
-	int		found;
 	int		dim;
-	t_list	**pc;
 
-	found = 0;
-	pc = pieces;
-	dim = (int)map->size - 1;
+	ft_putendl("\n*******SOLVE*******\n");
 	if (!pieces || !*pieces)
 		return (1);
-	// while ((*pc) != NULL)
-	// {
-	// 	ft_putstrarr(((t_etris*)(*pc)->cont)->shape);
-	// 	pc++;
-	// }
+	dim = (int)map->size - 1;
+	printf("zero based dimensions of the board = %d x %d\n", dim, dim);
 	while (map->c < dim)
 	{
+		printf("the boards current y axis location map->c = %d\n", map->c);
 		map->r = 0;
 		while (map->r < dim)
 		{
-			if (check_tet_fits((t_etris*)(*pieces)->cont, map))//, first))
+			printf("the boards current x axis location map->r = %d\n", map->r);
+			if (check_tet_fits((t_etris*)(*pieces)->cont, map))
 			{
 				tet_place((t_etris*)(*pieces)->cont, map, first);
 				map->r = 0;

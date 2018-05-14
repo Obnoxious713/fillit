@@ -77,6 +77,11 @@ int					main(int ac, char **av)
 
 	if (ac == 2)
 	{
+		ft_putendl("");
+		ft_putendl("       ***********************************************");
+		ft_putendl("*************************************************************");
+		ft_putendl("       ***********************************************");
+		ft_putendl("");
 		map_size = 2;
 		if (!(map = create_map(map_size)))
 			return (0);

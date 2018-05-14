@@ -14,7 +14,7 @@
 #include "libft/libft.h"
 #include <stdio.h>
 
-int				check_tet_fits(t_etris *tetris, t_map *map)//, t_point *point)
+int				check_tet_fits(t_etris *tetris, t_map *map)
 {
 	int			y;
 	int			x;
@@ -26,6 +26,7 @@ int				check_tet_fits(t_etris *tetris, t_map *map)//, t_point *point)
 	y = -1;
 	r = map->r;
 	c = map->c;
+	ft_putendl("\n*******CHECK_SAFE*******\n");
 	while (tetris->shape[++y] != NULL)
 	{
 		x = -1;
@@ -41,18 +42,27 @@ int				check_tet_fits(t_etris *tetris, t_map *map)//, t_point *point)
 		}
 	}
 	if (safe == 4)
+	{
+		ft_putendl("piece is safe to place");
 		return (1);
+	}
+	ft_putendl("piece is not placeable here");
 	return (0);
 }
 
 int				check_safe(t_map *map, int y, int x)
 {
-	ft_putendl("\n*******CHECK_SAFE*******\n");
-	if (c + y < (int)map->size)
+	if (map->c + y < (int)map->size)
 	{
+		printf("map->c = %d\nmap->r = %d\n", map->c, map->r);
+		printf("y = %d\nx = %d\n", y, x);
+		printf("the location that is being checked: %c\n", map->rows[map->c + y][map->r + x]);
 		if (map->rows[map->c + y][map->r + x] == '.')
+		{
+			ft_putendl("safe\n\n");
 			return (1);
-		printf("map->c = %d\n", );
+		}
+		ft_putendl("not safe\n\n");
 	}
 	return (0);
 }
