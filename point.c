@@ -60,3 +60,27 @@ void 	set_minmax_points(t_point ***point, int count, int location, int *x_max)
 	else if ((int)(location % 5) < (*point)[0]->x)
 		(*point)[0]->x = location % 5;
 }
+
+int			invalid_block(t_point ***points)
+{
+	free_minmax_points(points);
+	return (0);
+}
+
+void 				free_point(t_point **point)
+{
+	if (!point)
+		return ;
+	free(*point);
+	*point = NULL;
+}
+
+void 				free_minmax_points(t_point ***points)
+{
+	if (!points)
+		return ;
+	free_point(*points + 1);
+	free_point(*points);
+	free(*points);
+	*points = NULL;
+}

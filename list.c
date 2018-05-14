@@ -14,6 +14,24 @@
 #include "libft/libft.h"
 #include <stdio.h>
 
+void 			free_tetris(t_etris **tetris)
+{
+	int			height;
+
+	if (!tetris)
+		return ;
+	free_point(&((*tetris)->first));
+	if ((*tetris)->shape)
+	{
+		height = 0;
+		while (height < (*tetris)->height)
+			ft_strdel(&((*tetris)->shape[height++]));
+		free((*tetris)->shape);
+	}
+	free (*tetris);
+	*tetris = NULL;
+}
+
 t_list			*tet_lstnew(char *tet, int id)
 {
 	t_etris		*tetris;
@@ -23,10 +41,16 @@ t_list			*tet_lstnew(char *tet, int id)
 		return (NULL);
 	if (!(node = ft_lstnew((void*)tetris, sizeof(tetris))))
 	{
-		//free_tetris(&tetris);
+		free_tetris(&tetris);
 		return (NULL);
 	}
 	return (node);
+}
+
+static void 		lstdel_tetris(void *cont, size_t cont_size)
+{
+	(void)cont_size;
+	free_tetris((t_etris**)&cont);
 }
 
 int			tet_lstadd(t_list **start, t_list **end, char *tet, int p_nbr)
@@ -37,7 +61,7 @@ int			tet_lstadd(t_list **start, t_list **end, char *tet, int p_nbr)
 		*end = *start;
 	else
 	{
-		//ft_lstdel(start, &lstdel_tetris);
+		ft_lstdel(start, &lstdel_tetris);
 		return (0);
 	}
 	return (1);

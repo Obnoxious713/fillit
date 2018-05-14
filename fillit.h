@@ -84,6 +84,11 @@ int					check_tet_fits(t_etris *tetris, t_map *map);//, t_point *point);
 
 int					next_point(t_point **first, t_map *map);
 
+int					invalid_block(t_point ***points);
+void 				free_point(t_point **point);
+void 				free_minmax_points(t_point ***points);
+void 				free_tetris(t_etris **tetris);
+
 #endif
 
 // int					next_point(t_point **first, t_map *map)

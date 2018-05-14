@@ -47,15 +47,12 @@ int				check_tet_fits(t_etris *tetris, t_map *map)//, t_point *point)
 
 int				check_safe(t_map *map, int y, int x)
 {
-	int			c;
-	int			r;
-
-	c = map->c;
-	r = map->r;
+	ft_putendl("\n*******CHECK_SAFE*******\n");
 	if (c + y < (int)map->size)
 	{
-		if (map->rows[c + y][r + x] == '.')
+		if (map->rows[map->c + y][map->r + x] == '.')
 			return (1);
+		printf("map->c = %d\n", );
 	}
 	return (0);
 }
@@ -106,6 +103,7 @@ int					tet_check(char *tet, int rd, t_point ***hash)
 	int				x_max;
 	int				sides;
 
+	ft_putendl("\n*******TET_CHECK*******\n");
 	location = -1;
 	count = 0;
 	x_max = 0;

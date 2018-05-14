@@ -58,6 +58,9 @@ t_etris			*make_piece(char *tet, int id)
 	t_etris		*tetris;
 	t_point		**point;
 
+	ft_putendl("\n*******MAKE_PIECE*******\n");
+	ft_putendl("the tet that was passed in");
+	ft_putendl(tet);
 	if (!tet || !(point = (t_point**)ft_memalloc(sizeof(*point) * 42))
 		|| !(*point = (t_point*)ft_memalloc(sizeof(point) * 42)))
 		return (0);
@@ -75,7 +78,12 @@ t_etris			*make_piece(char *tet, int id)
 		tetris->first = point[0];
 		if (!(tetris->shape = shape_piece(tetris->height, tetris->width)))
 			return (0);
+		printf("\ntet height = %d\ntet width = %d\ntet id = %d\n", tetris->height, tetris->width, tetris->id);
+		printf("tet first x = %d\ntet first y = %d\n\n", tetris->first->x, tetris->first->y);
+		ft_putendl("the return from shape_piece currently stored in tetris->shape");
+		ft_putstrarr(shape);
 		fill_piece(tet, id, tetris);
+		ft_putendl("\nthe filled tetris piece to be stored in the list:");
 		ft_putstrarr(tetris->shape);
 		ft_putendl("");
 	}
