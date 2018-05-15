@@ -14,76 +14,25 @@
 #include "libft/libft.h"
 #include <stdio.h>
 
-/*
-**	check_tet_fits() iterates through the tetris shape checking if
-**
-*/
-int				check_tet_fits(t_etris *tetris, t_map *map)
+int				tet_x_shift(t_etris *tetris)
 {
-	int			y;
-	int			x;
-	int			c;
-	int			r;
-	int			safe;
+	int			x_shift;
 
-	safe = 0;
-	y = -1;
-	c = -1;
-	r = map->r;
-	c = map->c;
-	while (tetris->shape[++y] != NULL)
-	{
-		++c;
-		x = -1;
-		r = -1;
-		while (tetris->shape[y][++x] != '\0')
-		{
-			++r;
-			if (tetris->shape[y][x] != '.')
-			{
-				if (check_safe(map, c, r) != 0)
-				{
-					ft_putendl("\nsafe");
-					safe++;
-				}
-				else
-				{
-					ft_putendl("\ncheck_tet_fits !check_safe");
-					return (0);
-				}
-			}
-		}
-	}
-	if (safe == 4)
+	x_shift = 0;
+	while ((tetris->shape)[0][x_shift] == '.')
+		x_shift++;
+	return (x_shift);
+}
+
+int				check_tet_max(t_etris *tetris, t_map *map, t_point *point)
+{
+	if ((point->y + tetris->height <= (int)map->size)
+		&& (point->x - tet_x_shift(tetris) + tetris->width <= (int)map->size))
 		return (1);
 	return (0);
 }
 
-/*
-**	check_safe() checks the map location and if it is a '.' returns (1)
-**	if the x pos is the same as the map dim it returns (2)
-**	returns (0) if it's not safe
-*/
-int				check_safe(t_map *map, int c, int r)
-{
-	//null
-	//other letters
-	if (map->rows[c][r] == '.')
-	{
-		if ((map->rows)[c][r] != (int)map->size) // newlines
-		{
-			//if (map->rows)
-		}
-			return (1);
-	}
-	return (0);
-}
-
-/*
-**	validate_piece() counts and returns the number of hash->sides that a '#' touches
-**	+1 right, -1 left, +5 down, -5 up
-*/
-int					validate_piece(char *tet, int location, int	*sides)
+int				validate_piece(char *tet, int location, int *sides)
 {
 	if (tet[location + 1] == '#')
 		*sides += 1;
@@ -104,20 +53,13 @@ int					validate_piece(char *tet, int location, int	*sides)
 	return (0);
 }
 
-/*
-**	tet_check() takes the null terminated string and iterates through it
-**	checking that it only contains 4 '#', '.', and '\n'
-**	for newlines it checks to see if it's the EOF and returns 0 if not
-*/
-int					tet_check(char *tet, int rd, t_point **hash)
+int				tet_check(char *tet, int rd, t_point ***hash, int count)
 {
-	int				location;
-	int				count;
-	int				x_max;
-	int				sides;
+	int			location;
+	int			x_max;
+	int			sides;
 
 	location = -1;
-	count = 0;
 	x_max = 0;
 	sides = 0;
 	while (tet[++location])
@@ -125,38 +67,44 @@ int					tet_check(char *tet, int rd, t_point **hash)
 		if (tet[location] == '#')
 		{
 			if (validate_piece(tet, location, &sides) != 1 && sides > 8)
-			{
-				ft_putendl("\ntet_check !validate_piece");
-				return (0);
-			}
-			set_minmax_points(hash, count, location, x_max);
-			count++;
+				return (invalid_block(hash));
+			set_minmax_points(hash, count++, location, &x_max);
 		}
-		else if (tet[location] == '\n')
+		else if (tet[location] == '\n' || tet[location] != '.')
 		{
-			if ((location + 1) % 5 && !(rd == BUF && location == BUF -1))
-			{
-				ft_putendl("\ntet_check != '\\n'");
-				return (0);
-			}
-		}
-		else if (tet[location] != '.')
-		{
-			ft_putendl("\ntet_check != '.'");
-			return (0);
+			if ((location + 1) % 5 && !(rd == BUF && location == BUF - 1))
+				return (invalid_block(hash));
 		}
 	}
-	//printf("\ncount = %d\n", count);
-	if (count != 4)
-	{
-		ft_putendl("\ntet_check count != 4");
+	if (!(sides == 6 || sides == 8) || count != 4)
+		return (invalid_block(hash));
+	(*hash)[1]->x = x_max > (*hash)[1]->x ? x_max : (*hash)[1]->x;
+	return (1);
+}
 
+int				check_tet_fits(t_etris *tetris, t_map *map, t_point *point)
+{
+	int			x;
+	int			y;
+	char		**tetris_shape;
+	char		**board;
+
+	tetris_shape = tetris->shape;
+	board = map->rows;
+	if (!(tetris_dim(tetris)))
 		return (0);
-	}
-	if (sides == 6 || sides == 8)
+	if (check_tet_max(tetris, map, point) != 1)
+		return (0);
+	y = -1;
+	while (tetris_shape[++y] != NULL)
 	{
-		ft_putendl("\ntet_check sides == 6 || sides == 8");
-		return (1);
+		x = -1;
+		while (tetris_shape[y][++x] != '\0')
+		{
+			if (!(board[y + point->y][x - tet_x_shift(tetris) + point->x] == '.'
+				|| tetris_shape[y][x] == '.'))
+				return (0);
+		}
 	}
-	return (0);
+	return (1);
 }

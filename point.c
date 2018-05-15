@@ -14,15 +14,30 @@
 #include "libft/libft.h"
 #include <stdio.h>
 
-/*
-**	create_point() takes the x location and sets it to x % 5
-**	and set the y location to (len + 5) / 5 and then subtracts 1 if y is > 0
-*/
+int					get_next_point(t_point **point, char **board)
+{
+	if (!board)
+		return (0);
+	(*point)->x = (*point)->x + 1;
+	while (board[(*point)->y] != NULL)
+	{
+		while (board[(*point)->y][(*point)->x] != '\0')
+		{
+			if (board[(*point)->y][(*point)->x] == '.')
+				return (1);
+			(*point)->x = (*point)->x + 1;
+		}
+		(*point)->y = (*point)->y + 1;
+		(*point)->x = 0;
+	}
+	return (0);
+}
+
 t_point				*create_point(int location)
 {
 	t_point			*point;
 
-	if ((point = (t_point*)ft_memalloc(sizeof(*point))))
+	if ((point = (t_point*)ft_memalloc(sizeof(*point) * 42)))
 	{
 		point->x = location % 5;
 		point->y = (location + 5) / 5;
@@ -32,11 +47,30 @@ t_point				*create_point(int location)
 	return (point);
 }
 
-void 	set_minmax_points(t_point **point, int count, int location, int x_max)
+void				set_minmax_points(t_point ***point, int count,
+										int location, int *x_max)
 {
-	x_max = (location % 5) > x_max ? (location % 5) : x_max;
+	*x_max = (int)(location % 5) > *x_max ? (int)(location % 5) : *x_max;
 	if (count == 0 || count == 3)
-		point[count == 0 ? 0 : 1] = create_point(location);
-	else if ((location % 5) < point[0]->x)
-		point[0]->x = location % 5;
+		(*point)[count == 0 ? 0 : 1] = create_point(location);
+	else if ((int)(location % 5) < (*point)[0]->x)
+		(*point)[0]->x = location % 5;
+}
+
+void				free_point(t_point **point)
+{
+	if (!point)
+		return ;
+	free(*point);
+	*point = NULL;
+}
+
+void				free_minmax_points(t_point ***points)
+{
+	if (!points)
+		return ;
+	free_point(*points + 1);
+	free_point(*points);
+	free(*points);
+	*points = NULL;
 }

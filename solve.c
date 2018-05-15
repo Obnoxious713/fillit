@@ -14,95 +14,107 @@
 #include "libft/libft.h"
 #include <stdio.h>
 
-int					solve_map(t_map *map, t_list **pieces, t_point *point)
+int					invalid_block(t_point ***points)
+{
+	free_minmax_points(points);
+	return (0);
+}
+
+void				tet_place(t_etris *tetris, t_map *map, t_point *first)
+{
+	int				y;
+	int				x;
+	char			**board;
+	char			**tetris_shape;
+
+	y = -1;
+	tetris->first = create_point(0);
+	tetris->first = create_point(0);
+	board = map->rows;
+	tetris_shape = tetris->shape;
+	while (tetris_shape[++y] != NULL)
+	{
+		x = -1;
+		while (tetris_shape[y][++x] != '\0')
+		{
+			if (tetris_shape[y][x] != '.')
+			{
+				board[first->y + y][first->x - tet_x_shift(tetris) +
+				x] = tetris_shape[y][x];
+			}
+		}
+	}
+	tetris->first->y = first->y;
+	tetris->first->x = (first->x) - tet_x_shift(tetris);
+}
+
+void				tet_remove(t_etris *tetris, t_map *map)
+{
+	int				r;
+	int				c;
+	char			**board;
+
+	c = -1;
+	board = map->rows;
+	while (tetris->shape[++c] != NULL)
+	{
+		r = -1;
+		while (tetris->shape[c][++r] != '\0')
+		{
+			if (tetris->shape[c][r] != '.')
+				board[c + tetris->first->y][r + tetris->first->x] = '.';
+		}
+	}
+}
+
+int					solve(t_list **pieces, t_map *map, t_point *first)
 {
 	int				fit;
 
-	fit = 0;
 	if (!pieces || !*pieces)
-	{
-		ft_putendl("\nsolve_map !pieces || !*pieces");
-		return (0);
-	}
-	while (!(fit = check_tet_fits((t_etris*)(*pieces)->cont, map)))
-	{
-		ft_putendl("\nsolve_map !check_tet_fits");
-		return (0);
-	}
+		return (1);
+	while ((!(fit = check_tet_fits((t_etris*)(*pieces)->cont, map, first))
+			&& get_next_point(&first, map->rows)))
+		;
 	if (!fit)
-	{
-		ft_putendl("\nsolve_map !fit");
 		return (0);
-	}
-	tet_place((t_etris*)(*pieces)->cont, map, point);
-	if (!solve_map(map, &((*pieces)->next), create_point(0)))
+	tet_place((t_etris*)(*pieces)->cont, map, first);
+	if (!solve(&((*pieces)->next), map, create_point(0)))
 	{
-		ft_putendl("\nsolve_map !solve_map: tet_remove called");
 		tet_remove((t_etris*)(*pieces)->cont, map);
-		// if (!get_next_point(&p_start, map->rows))
-		// {
-		// 	p_start->x = 0;
-		// 	p_start->y = 0;
-		// 	return (0);
-		// }
-        //	TODO:
-		return (solve_map(map, pieces, point));
+		if (!(get_next_point(&first, map->rows)))
+		{
+			first->y = 0;
+			first->x = 0;
+			return (0);
+		}
+		return (solve(pieces, map, first));
 	}
 	return (1);
 }
 
-/*
-**	map_solve() is called until (*pieces) is NULL
-**	it calls check_tet_fits and places the tet on the map if it does
-**	it then calls map_solve() again with the next piece
-**	if that fails it removes the last tet
-*/
-int					setup_solve(t_list **pieces)
+int					map_solve(t_list **pieces)
 {
+	t_list			*lst_tail;
 	t_map			*map;
-	t_point			*p_start;
-	t_list			*last_piece;
+	t_point			*first;
 	size_t			map_size;
 
-	map_size = BOARD_SIZE;
+	map_size = 2;
 	if (!(map = create_map(map_size)))
-	{
-		ft_putendl("\nsetup_solve !map");
 		return (0);
-	}
-	if (!(p_start = create_point(0)))
-	{
-		ft_putendl("\nsetup_solve !p_start");
+	if (!(first = create_point(0)))
 		return (0);
-	}
-	while ((last_piece = *pieces)
-		&& !(solve_map(map, &last_piece, p_start)))
+	while ((lst_tail = *pieces) && !(solve(&lst_tail, map, first)))
 	{
 		free_map(&map);
 		if (!(map = create_map(++map_size)))
-		{
-			ft_putendl("\nsetup_solve !map");
 			return (0);
-		}
-		p_start->x = 0;
-		p_start->y = 0;
+		first->y = 0;
+		first->x = 0;
 	}
 	ft_putstrarr(map->rows);
 	free_map(&map);
 	free(map);
-	return (1);
-}
-
-/*
-**	solve() calls create map and stores the value in map
-**	it then calls map_solve()
-*/
-int					solve(t_list *pieces)
-{
-	if (setup_solve(&pieces))
-	{
-		ft_putendl("\nsolve !setup_solve");
-		return (0);
-	}
 	return (1);
 }
