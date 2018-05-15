@@ -29,6 +29,7 @@ typedef struct			s_etris
 	char				**shape;
 	int					width; // most tetrimino dims (2, 3) (3, 2)
 	int					height; // only one possible fit in (1, 4) (4, 1) (2, 2)
+	int					id;
 	t_point				*first;
 }						t_etris;
 
@@ -48,6 +49,7 @@ typedef struct			s_map
 **		void			*cont;
 **		size_t			cont_size;
 **		struct s_list	*next;
+**		struct s_list	*prev;
 **	}					t_list;
 */
 
@@ -60,26 +62,117 @@ t_etris				*make_piece(char *tet, int id);
 char				**shape_piece(int height, int width);
 void 				fill_piece(char *tet, char id, t_etris *tetris);
 
-int					tet_check(char *tet, int rd, t_point **hash);
+int					tet_check(char *tet, int rd, t_point ***hash);
 int					validate_piece(char *tet, int location, int *sides);
 
-void 				set_minmax_points(t_point **point, int count, int location, int x_max);
+void 				set_minmax_points(t_point ***point, int count, int location, int *x_max);
 t_point				*create_point(int location);
 
 t_map				*create_map(size_t size);
 char				**make_empty_map(size_t size);
 void 				free_map(t_map **map);
 
-int					solve(t_list *pieces);
-int					setup_solve(t_list **pieces);
-int					solve_map(t_map *map, t_list **pieces, t_point *point);
+int					solve(t_list **pieces, t_map *map, t_point *first);
 
-void 				tet_place(t_etris* tetris, t_map *map, t_point *point);
-void 				tet_remove(t_etris* tetris, t_map *map);
+void 				tet_place(t_etris *tetris, t_map *map, t_point *first);
+void 				tet_remove(t_etris *pieces, t_map *map, t_point *first);
 int					check_tet_max(t_etris *tetris, t_map *map, t_point *point);
 int					tet_x_shift(t_etris *tetris);
 
 int					check_safe(t_map *map, int y, int x);
-int					check_tet_fits(t_etris *tetris, t_map *map);
+int					check_tet_fits(t_etris *tetris, t_map *map, t_point *point);
+
+int					next_point(t_point **first, t_map *map);
+int					get_next_point(t_point **point, char **board);
+
+int					invalid_block(t_point ***points);
+void 				free_point(t_point **point);
+void 				free_minmax_points(t_point ***points);
+void 				free_tetris(t_etris **tetris);
+
+int					map_solve(t_list **pieces);
+int					tetris_dim(t_etris *tetris);
 
 #endif
+
+// int					next_point(t_point **first, t_map *map)
+// {
+// 	int				fc;
+// 	int				fr;
+// 	char			**board;
+//
+// 	fc = (*first)->y;
+// 	fr = (*first)->x;
+// 	board = map->rows;
+// 	while (board[fc] != NULL)
+// 	{
+// 		while (board[fc][fr] != '\0')
+// 		{
+// 			if (board[fc][fr] == '.')
+// 				return (1);
+// 			fr += 1;
+// 		}
+// 		fc += 1;
+// 		fr = 0;
+// 	}
+// 	return (0);
+// }
+
+
+// int					solve_map(t_map *map, t_list **pieces)
+// {
+// 	int				fit;
+//
+// 	fit = 0;
+// 	if (!pieces || !*pieces)
+// 	{
+// 		ft_putendl("\nsolve_map !pieces || !*pieces");
+// 		return (0);
+// 	}
+// 	while (!(fit = check_tet_fits((t_etris*)(*pieces)->cont, map)))
+// 	{
+// 		ft_putendl("\nsolve_map !check_tet_fits");
+// 		return (0);
+// 	}
+// 	if (!fit)
+// 	{
+// 		ft_putendl("\nsolve_map !fit");
+// 		return (0);
+// 	}
+// 	tet_place((t_etris*)(*pieces)->cont, map);
+// 	if (!(solve_map(map, &((*pieces)->next))))
+// 	{
+// 		ft_putendl("\nsolve_map !solve_map: tet_remove called");
+// 		tet_remove((t_etris*)(*pieces)->cont, map);
+// 		return (solve_map(map, pieces));
+// 	}
+// 	return (1);
+// }
+//
+// /*
+// **	map_solve() is called until (*pieces) is NULL
+// **	it calls check_tet_fits and places the tet on the map if it does
+// **	it then calls map_solve() again with the next piece
+// **	if that fails it removes the last tet
+// */
+// int					setup_solve(t_list **pieces, t_map *map)
+// {
+// 	t_list			*last_piece;
+// 	size_t			map_size;
+//
+//
+// 	while ((last_piece = *pieces)
+// 		&& !(solve_map(map, &last_piece)))
+// 	{
+// 		free_map(&map);
+// 		if (!(map = create_map(++map_size)))
+// 		{
+// 			ft_putendl("\nsetup_solve !create_map");
+// 			return (0);
+// 		}
+// 	}
+// 	ft_putstrarr(map->rows);
+// 	free_map(&map);
+// 	free(map);
+// 	return (1);
+// }

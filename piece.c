@@ -14,10 +14,6 @@
 #include "libft/libft.h"
 #include <stdio.h>
 
-/*
-**	fill_piece() iterates through each row of tet and shape placing the '#'
-**	in the correct spot and then sets the '#' to the correct id
-*/
 void 			fill_piece(char *tet, char id, t_etris *tetris)
 {
 	int 				x;
@@ -33,10 +29,6 @@ void 			fill_piece(char *tet, char id, t_etris *tetris)
 	}
 }
 
-/*
-**	shape_piece() creates a grid of '.'	based on the height and width
-**	one row at a time and null terminates at the end
-*/
 char			**shape_piece(int height, int width)
 {
 	char		**shape;
@@ -45,12 +37,11 @@ char			**shape_piece(int height, int width)
 	i = 0;
 	if ((shape = (char**)ft_memalloc(sizeof(*shape) * 42)))
 	{
-		//shape[i] = (char*)ft_memalloc(sizeof(shape) * width * height);
+		shape[i] = (char*)ft_memalloc(sizeof(shape) * width * height);
 		while (i < height)
 		{
 			if (!(shape[i] = ft_strnew(width + 1)))
 			{
-				ft_putendl("\nshape_piece !shape[i] = ft_strnew");
 				while (--i)
 					ft_strdel(&shape[i]);
 				return (0);
@@ -62,45 +53,42 @@ char			**shape_piece(int height, int width)
 	return (shape);
 }
 
-/*
-**	make_piece() sets the pieces x and y pos
-**	then sets the piece width, height, first pos, and shape
-**	it then fills the shape with the correct id letter
-**	it then frees the pos once it's done
-*/
 t_etris			*make_piece(char *tet, int id)
 {
 	t_etris		*tetris;
 	t_point		**point;
 
-	if (!tet || !(point = (t_point**)ft_memalloc(sizeof(*point) * 777))
-		|| !(*point = (t_point*)ft_memalloc(sizeof(point) * 777)))
-	{
-		ft_putendl("\nmake_piece !tet || !point malloc");
+	ft_putendl("\n*******MAKE_PIECE*******\n");
+	ft_putendl("the tet that was passed in from the file");
+	ft_putendl(tet);
+	if (!tet || !(point = (t_point**)ft_memalloc(sizeof(*point) * 7))
+		|| !(*point = (t_point*)ft_memalloc(sizeof(point) * 7)))
 		return (0);
-	}
-	(point[0][0]).x = 0;
-	(point[0][0]).y = 0;
-	(point[0][1]).x = 0;
-	(point[0][1]).y = 0;
-
-	if (!(tet_check(tet, 21, point)))
-	{
-		ft_putendl("\nmake_piece !tet_check");
+	point[0][0].x = 0;
+	point[0][0].y = 0;
+	point[0][1].x = 0;
+	point[0][1].y = 0;
+	if (!(tet_check(tet, 21, &point)))
 		return (0);
-	}
-	//printf("\nmake_piece sides = %d\n", (*point)->sides);
 	if ((tetris = (t_etris*)ft_memalloc(sizeof(*tetris))))
 	{
+		// ft_putendl("the height and width of the unshaped tet passed in from the file");
 		tetris->height = (*point[1]).y - (*point[0]).y + 1;
+		// printf("tetris->height == (*point[1]).y = %d - (*point[0]).y = %d + 1 == %d\n", (*point[1]).y, (*point[0]).y, (*point[1]).y - (*point[0]).y + 1);
 		tetris->width = (*point[1]).x - (*point[0]).x + 1;
+		// printf("tetris->width == (*point[1]).x = %d - (*point[0]).x = %d + 1 == %d\n\n", (*point[1]).x, (*point[0]).x, (*point[1]).x - (*point[0]).x + 1);
+		tetris->id = id;
 		tetris->first = point[0];
 		if (!(tetris->shape = shape_piece(tetris->height, tetris->width)))
-		{
-			ft_putendl("\nmake_piece !shape_piece");
 			return (0);
-		}
+		// printf("\ntet height = %d\ntet width = %d\ntet id = %d\n", tetris->height, tetris->width, tetris->id);
+		// printf("tet first x = %d\ntet first y = %d\n\n", tetris->first->x, tetris->first->y);
+		// ft_putendl("the return from shape_piece currently stored in tetris->shape");
+		// ft_putstrarr(tetris->shape);
 		fill_piece(tet, id, tetris);
+		// ft_putendl("\nthe filled tetris piece to be stored in the list:");
+		// ft_putstrarr(tetris->shape);
+		// ft_putendl("");
 	}
 	return (tetris);
 }

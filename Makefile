@@ -18,7 +18,7 @@ FLAGS = -Wall -Werror -Wextra -g #-fsanitize=address#lldb		remove
 
 NORM = norminette -R CheckForbiddenSourceHeader
 
-SRC = check.c list.c map.c piece.c place.c point.c solve.c
+SRC = check.c list.c map.c piece.c point.c solve.c #place.c
 
 OBJ = $(SRC:.c=.o)
 

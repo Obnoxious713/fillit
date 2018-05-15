@@ -14,34 +14,45 @@
 #include "libft/libft.h"
 #include <stdio.h>
 
-/*
-**	tet_lstnew() takes tet and calls makes_piece() whose return is stored into
-**	the t_etris which is then stored into node by calling ft_lstnew()
-*/
+void 			free_tetris(t_etris **tetris)
+{
+	int			height;
+
+	if (!tetris)
+		return ;
+	free_point(&((*tetris)->first));
+	if ((*tetris)->shape)
+	{
+		height = 0;
+		while (height < (*tetris)->height)
+			ft_strdel(&((*tetris)->shape[height++]));
+		free((*tetris)->shape);
+	}
+	free (*tetris);
+	*tetris = NULL;
+}
+
 t_list			*tet_lstnew(char *tet, int id)
 {
 	t_etris		*tetris;
 	t_list		*node;
 
 	if (!(tetris = make_piece(tet, id)))
-	{
-		ft_putendl("\ntet_lstnew !tetris");
 		return (NULL);
-	}
 	if (!(node = ft_lstnew((void*)tetris, sizeof(tetris))))
 	{
-		ft_putendl("\ntet_lstnew !node");
-		//free_tetris(&tetris);
+		free_tetris(&tetris);
 		return (NULL);
 	}
 	return (node);
 }
 
-/*
-**	tet_lstadd() checks that there is a piece and stores the return
-**	from tet_lstnew() into the next element then moves to the next empty postion
-**	and deletes the element otherwise
-*/
+static void 		lstdel_tetris(void *cont, size_t cont_size)
+{
+	(void)cont_size;
+	free_tetris((t_etris**)&cont);
+}
+
 int			tet_lstadd(t_list **start, t_list **end, char *tet, int p_nbr)
 {
 	if (p_nbr && ((*end)->next = tet_lstnew(tet, 'A' + p_nbr)))
@@ -50,8 +61,7 @@ int			tet_lstadd(t_list **start, t_list **end, char *tet, int p_nbr)
 		*end = *start;
 	else
 	{
-		ft_putendl("\ntet_lstadd 'else' ft_lstdel called");
-		//ft_lstdel(start, &lstdel_tetris);
+		ft_lstdel(start, &lstdel_tetris);
 		return (0);
 	}
 	return (1);
