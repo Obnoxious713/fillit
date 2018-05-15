@@ -72,7 +72,7 @@ int				tet_check(char *tet, int rd, t_point ***hash, int count)
 		}
 		else if (tet[location] == '\n' || tet[location] != '.')
 		{
-			if ((location + 1) % 5 && !(rd == BUF && location == BUF - 1))
+			if ((location + 1) % 5 && !(rd == BUF))// && location == BUF - 1))
 				return (invalid_block(hash));
 		}
 	}
